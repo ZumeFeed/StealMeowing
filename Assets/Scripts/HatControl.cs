@@ -9,12 +9,13 @@ public class HatControl : MonoBehaviour
     Vector2 vector, direct;
     float distance;
 
-    [SerializeField] float maxDistance = 4;
+    [SerializeField] float maxDistance = 3;
     [SerializeField] float timeMovingBase = 0.05f;
     float timeMoving = 0, timeElapsed = 0;
 
     Vector2 startPosition, endPosition;
     LineRenderer line, arrow;
+
     bool isMove;
     sbyte observers = 0;
     [SerializeField] int div = 8;
@@ -65,9 +66,11 @@ public class HatControl : MonoBehaviour
             distance = vector.magnitude; // найти расстояние между ними
             direct = vector / distance; // найти направление
 
+            if (distance > maxDistance) distance = maxDistance;
+
             mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             line.enabled = true;
-            line.SetPosition(0, mousePos + new Vector3(0, 0, 10));
+            line.SetPosition(0, transform.position + new Vector3(direct.x * distance, direct.y * distance));
             line.SetPosition(1, transform.position);
 
             arrow.enabled = true;
@@ -91,7 +94,7 @@ public class HatControl : MonoBehaviour
             timeMoving = timeMovingBase + (distance / div);
 
             startPosition = transform.position;
-            endPosition = new Vector3(transform.position.x - ((distance / 2) * direct.x), transform.position.y - ((distance / 2) * direct.y));
+            endPosition = new Vector3(transform.position.x - ((distance) * direct.x), transform.position.y - ((distance) * direct.y));
 
             isMove = true;
 
@@ -239,12 +242,12 @@ public class HatControl : MonoBehaviour
 
     public void HitAnimationTrigger()
     {
-        if (observers == 0)
+        //if (observers == 0)
             health--;
-        else
-            health-=2;
-        if (health < 0)
-            health = 0;
+        //else
+        //    health-=2;
+        //if (health < 0)
+        //    health = 0;
 
         healthBar.GetComponent<SpriteRenderer>().sprite = hpSprites[health];
         if (health == 0)
@@ -274,6 +277,11 @@ public class HatControl : MonoBehaviour
             miniCat.GetComponent<SpriteRenderer>().flipX = true;
         }
         timer = offsetTime;
+
+        if (nextlevel)
+        {
+            miniCat.GetComponent<Animator>().SetBool("isFish", true);
+        }
 
         audioSource.clip = sounds[4];
         audioSource.Play();
