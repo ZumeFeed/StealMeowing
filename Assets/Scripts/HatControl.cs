@@ -5,41 +5,40 @@ using UnityEngine.SceneManagement;
 
 public class HatControl : MonoBehaviour
 {
-    Vector3 mousePos;
-    Vector2 vector, direct;
-    float distance;
-
-    [SerializeField] float maxDistance = 3;
-    [SerializeField] float timeMovingBase = 0.05f;
-    float timeMoving = 0, timeElapsed = 0;
-
-    Vector2 startPosition, endPosition;
+    Vector3 mousePosition;
+    Vector2 contorlVector, moveDirect;
+    float moveDistance;
     LineRenderer line, arrow;
 
+    [SerializeField] float maxDistance = 3, timeMovingBase = 0.05f;
+    float timeMoving = 0, timeMovingElapsed = 0;
+    Vector2 startPosition, endPosition;
+
     bool isMove;
+    bool isBlink = false;
+    bool isStuned = false;
+    bool isHatFall = false;
+    bool nextlevel = false;
+
     sbyte observers = 0;
-    [SerializeField] int div = 8;
+    [SerializeField] int div = 8; // Плохое именование
 
     [SerializeField] float stunTime = 0.2f;
     [SerializeField] float blinkPeriod = 0.1f;
     float stunTimer = 0;
     float blinkTimer = 0;
-    bool blink = false;
-    bool isStuned = false;
-    bool isHatFall = false;
-    bool nextlevel = false;
 
     [SerializeField] sbyte health = 3;
     [SerializeField] GameObject healthBar;
-    [SerializeField] List<Sprite> hpSprites;
+    [SerializeField] List<Sprite> hpSprites; // Плохо что должен иметь ссылку
     [SerializeField] List<Sprite> bucketSprites;
 
     [SerializeField] GameObject miniCat;
 
     float afkTimer = 0, afkTime = 15;
 
-    float timer = 0;
     [SerializeField] float offsetTime = 2;
+    float offsetTimer = 0;
 
     Rigidbody2D rb;
     Animator animator;
@@ -57,63 +56,65 @@ public class HatControl : MonoBehaviour
         audioSource = GameObject.Find("SoundListener").GetComponent<AudioSource>();
     }
 
+    void MoveCalculate()
+    {
+        mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        contorlVector = mousePosition - transform.position;
+        moveDistance = contorlVector.magnitude;
+        moveDirect = contorlVector / moveDistance;
+        if (moveDistance > maxDistance) 
+            moveDistance = maxDistance;
+    }
+
     void Update()
     {
-
-        if (Input.GetMouseButton(0) && !isMove && !isStuned && !isHatFall)
+        if (!isMove && !isStuned && !isHatFall) // Управление
         {
-            vector = mousePos - transform.position;
-            distance = vector.magnitude; // найти расстояние между ними
-            direct = vector / distance; // найти направление
-
-            if (distance > maxDistance) distance = maxDistance;
-
-            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            line.enabled = true;
-            line.SetPosition(0, transform.position + new Vector3(direct.x * distance, direct.y * distance));
-            line.SetPosition(1, transform.position);
-
-            arrow.enabled = true;
-            arrow.SetPosition(0, transform.position - new Vector3(direct.x/2, direct.y/2, 0));
-            arrow.SetPosition(1, transform.position - new Vector3(direct.x * (distance / 4) + direct.x/2, direct.y * (distance / 4) + direct.y/2, 0));
-
-            animator.SetInteger("state", 2);
-            afkTimer = 0;
-        }
-
-        if (Input.GetMouseButtonUp(0) && !isMove && !isStuned && !isHatFall)
-        {
-            vector = mousePos - transform.position;
-            distance = vector.magnitude; // найти расстояние между ними
-            direct = vector / distance; // найти направление
-
-            line.enabled = false;
-            arrow.enabled = false;
-        
-            if (distance > maxDistance) distance = maxDistance;
-            timeMoving = timeMovingBase + (distance / div);
-
-            startPosition = transform.position;
-            endPosition = new Vector3(transform.position.x - ((distance) * direct.x), transform.position.y - ((distance) * direct.y));
-
-            isMove = true;
-
-            if (direct.x >= 0)
-                animator.SetInteger("state", 4);
-            else
-                animator.SetInteger("state", 3);
-
-            audioSource.clip = sounds[0];
-            audioSource.Play();
-        }
-
-        if (isMove)
-        {
-            timeElapsed += Time.deltaTime;
-            rb.position = Vector3.Lerp(startPosition, endPosition, timeElapsed/timeMoving);
-            if (timeElapsed >= timeMoving)
+            if (Input.GetMouseButton(0))
             {
-                timeElapsed = 0;
+                MoveCalculate();
+
+                line.enabled = true;
+                line.SetPosition(0, transform.position + (Vector3)(moveDirect * moveDistance));
+                line.SetPosition(1, transform.position);
+                arrow.enabled = true;
+                arrow.SetPosition(0, transform.position - (Vector3)moveDirect / 2);
+                arrow.SetPosition(1, transform.position - (Vector3)moveDirect * 0.75f);
+
+                afkTimer = 0;
+                animator.SetInteger("state", 2);
+            }
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                MoveCalculate();
+
+                line.enabled = false;
+                arrow.enabled = false;
+
+                timeMoving = timeMovingBase + (moveDistance / div);
+                startPosition = transform.position;
+                endPosition = transform.position - (Vector3)(moveDistance * moveDirect);
+
+                isMove = true;
+
+                if (moveDirect.x >= 0) 
+                    animator.SetInteger("state", 4);
+                else 
+                    animator.SetInteger("state", 3);
+
+                audioSource.clip = sounds[0];
+                audioSource.Play();
+            }
+        }
+
+        if (isMove) // Движение
+        {
+            timeMovingElapsed += Time.deltaTime;
+            rb.position = Vector3.Lerp(startPosition, endPosition, timeMovingElapsed/timeMoving);
+            if (timeMovingElapsed >= timeMoving)
+            {
+                timeMovingElapsed = 0;
                 isMove = false;
                 animator.SetInteger("state", 0);
             }
@@ -125,31 +126,31 @@ public class HatControl : MonoBehaviour
             blinkTimer += Time.deltaTime;
             if (blinkTimer >= blinkPeriod)
             {
-                blink = !blink;
+                isBlink = !isBlink;
                 blinkTimer = 0;
             }
 
-            if (blink) 
+            if (isBlink) 
                 GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.2f);
-            else
+            else 
                 GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
 
             stunTimer += Time.deltaTime;
             if (stunTimer >= stunTime)
             {
-                animator.SetInteger("state", 0);
                 isStuned = false;
                 stunTimer = 0;
-                blink = false;
+                isBlink = false;
                 blinkTimer = 0;
                 GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
+                animator.SetInteger("state", 0);
             }
         }
 
-        if (timer > 0)
+        if (offsetTimer > 0)
         {
-            timer -= Time.deltaTime;
-            if (timer <=0)
+            offsetTimer -= Time.deltaTime;
+            if (offsetTimer <=0)
             {
                 if (nextlevel)
                 {
@@ -178,18 +179,22 @@ public class HatControl : MonoBehaviour
 
         
     }
+
     void OnCollisionEnter2D(Collision2D collision2D)
     {
+        line.enabled = false;
+        arrow.enabled = false;
+
         if (collision2D.transform.tag == "Finish")
         {
             collision2D.transform.GetComponent<SpriteRenderer>().sprite = bucketSprites[1];
             isMove = false;
-            timeElapsed = 0;
-            rb.position += direct / 6;
+            timeMovingElapsed = 0;
+            rb.position += moveDirect / 6;
             animator.SetInteger("state", 6);
             isHatFall = true;
             nextlevel = true;
-            if (direct.x < 0)
+            if (moveDirect.x < 0)
                 GetComponent<SpriteRenderer>().flipX = true;
 
             audioSource.clip = sounds[2];
@@ -198,8 +203,8 @@ public class HatControl : MonoBehaviour
         else if (isMove)
         {
             isMove = false;
-            timeElapsed = 0;
-            rb.position += direct / 6;
+            timeMovingElapsed = 0;
+            rb.position += moveDirect / 6;
             animator.SetInteger("state", 5);
 
             audioSource.clip = sounds[1];
@@ -212,7 +217,6 @@ public class HatControl : MonoBehaviour
         if (collider2D.tag == "Observation")
             observers++;
     }
-
     void OnTriggerStay2D(Collider2D collider2D)
     {
         if (collider2D.tag == "Observation")
@@ -220,7 +224,7 @@ public class HatControl : MonoBehaviour
             if (collider2D.GetComponent<ScareMech>().getIsWatching() && isMove)
             {
                 isMove = false; //Заглушка
-                timeElapsed = 0;
+                timeMovingElapsed = 0;
                 animator.SetInteger("state", 5);
 
                 audioSource.clip = sounds[3];
@@ -228,7 +232,6 @@ public class HatControl : MonoBehaviour
             }
         }
     }
-
     void OnTriggerExit2D(Collider2D collider2D)
     {
         if (collider2D.tag == "Observation")
@@ -239,7 +242,6 @@ public class HatControl : MonoBehaviour
     {
         animator.SetInteger("state", 0);
     }
-
     public void HitAnimationTrigger()
     {
         //if (observers == 0)
@@ -254,8 +256,8 @@ public class HatControl : MonoBehaviour
         {
             animator.SetInteger("state", 6);
             isHatFall = true;
-            timer = offsetTime;
-            if (direct.x < 0)
+            offsetTimer = offsetTime;
+            if (moveDirect.x < 0)
                 GetComponent<SpriteRenderer>().flipX = true;
         }
         else
@@ -263,20 +265,19 @@ public class HatControl : MonoBehaviour
             isStuned = true;
         }
     }
-
     public void fallHatAnimationTrigger()
     {
-        if (direct.x < 0)
+        if (moveDirect.x < 0)
         {
             miniCat = Instantiate(miniCat, transform);
         }
-        else if (direct.x >= 0)
+        else if (moveDirect.x >= 0)
         {
             miniCat = Instantiate(miniCat, transform);
             miniCat.GetComponent<minicat_run>().speed = -miniCat.GetComponent<minicat_run>().speed;
             miniCat.GetComponent<SpriteRenderer>().flipX = true;
         }
-        timer = offsetTime;
+        offsetTimer = offsetTime;
 
         if (nextlevel)
         {
