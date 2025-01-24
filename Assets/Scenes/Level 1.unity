@@ -8972,6 +8972,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1450100452}
   - component: {fileID: 1450100451}
+  - component: {fileID: 1450100453}
   m_Layer: 0
   m_Name: SoundListener
   m_TagString: Untagged
@@ -9090,6 +9091,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1450100453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1450100450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f22a019c879d6194ab4d6ea6c0be9fab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - {fileID: 8300000, guid: 6384d5e6ff4591b4e98e827334142138, type: 3}
+  - {fileID: 8300000, guid: 39d2df05f8a7c2f41b76757e577ee010, type: 3}
+  - {fileID: 8300000, guid: 1c676dbceab740a478ed9ef8ebfff317, type: 3}
+  - {fileID: 8300000, guid: e3026aca96bb6f04dafed3e75913f452, type: 3}
+  - {fileID: 8300000, guid: 35107bf0a2259db4b96881b8448b4de5, type: 3}
 --- !u!1 &1462948975
 GameObject:
   m_ObjectHideFlags: 0
