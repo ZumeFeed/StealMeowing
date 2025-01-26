@@ -8461,7 +8461,7 @@ GameObject:
   - component: {fileID: 951953638}
   - component: {fileID: 951953639}
   m_Layer: 0
-  m_Name: health
+  m_Name: HealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9518,6 +9518,7 @@ GameObject:
   - component: {fileID: 1561450324}
   - component: {fileID: 1561450323}
   - component: {fileID: 1561450322}
+  - component: {fileID: 1561450325}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -9575,6 +9576,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1561450325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1561450321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d38e905467164d45a20919552bd150c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  offsetTime: 2
 --- !u!1 &1745639890
 GameObject:
   m_ObjectHideFlags: 0
@@ -9587,7 +9601,7 @@ GameObject:
   - component: {fileID: 1745639891}
   - component: {fileID: 1745639893}
   m_Layer: 0
-  m_Name: bucket of fish
+  m_Name: Bucket
   m_TagString: Finish
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9856,7 +9870,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6079618187191585702, guid: a01ac627d9b4b1242b2462afb76897c4, type: 3}
+    - target: {fileID: 2591088376984280380, guid: a01ac627d9b4b1242b2462afb76897c4, type: 3}
+      propertyPath: finish
+      value: 
+      objectReference: {fileID: 1745639890}
+    - target: {fileID: 2591088376984280380, guid: a01ac627d9b4b1242b2462afb76897c4, type: 3}
       propertyPath: healthBar
       value: 
       objectReference: {fileID: 951953637}
@@ -9878,8 +9896,8 @@ SceneRoots:
   - {fileID: 1504011689}
   - {fileID: 1449092144}
   - {fileID: 1745639892}
-  - {fileID: 1561450324}
   - {fileID: 1817219973}
   - {fileID: 1133304999}
   - {fileID: 1496852292}
   - {fileID: 1450100452}
+  - {fileID: 1561450324}

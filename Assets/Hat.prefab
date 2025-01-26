@@ -104,6 +104,7 @@ GameObject:
   - component: {fileID: 7153738917797482538}
   - component: {fileID: 102808198620057851}
   - component: {fileID: 6079618187191585702}
+  - component: {fileID: 2591088376984280380}
   - component: {fileID: 6482556952117792830}
   - component: {fileID: 175115103643229074}
   m_Layer: 0
@@ -220,29 +221,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9795d5ff198395447b6320427433830f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxDistance: 2
+  maxMovingDistance: 2
   timeMovingBase: 0.12
-  div: 8
-  stunTime: 1
-  blinkPeriod: 0.2
+  timeMovingDivider: 8
+--- !u!114 &2591088376984280380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7011385039524003926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6f1a83296c70f74f94077a0422c6ac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   health: 3
-  healthBar: {fileID: 0}
   hpSprites:
   - {fileID: 1806595514, guid: 3c36e7926a4919840b41c06d0d8d0dc3, type: 3}
   - {fileID: -1314323939, guid: 3c36e7926a4919840b41c06d0d8d0dc3, type: 3}
   - {fileID: 2008962891, guid: 3c36e7926a4919840b41c06d0d8d0dc3, type: 3}
   - {fileID: -75669410, guid: 3c36e7926a4919840b41c06d0d8d0dc3, type: 3}
-  bucketSprites:
-  - {fileID: 1370534867, guid: 8408b4f46eb592144bfca641afe1e437, type: 3}
-  - {fileID: -1502039523, guid: 8408b4f46eb592144bfca641afe1e437, type: 3}
+  stunTime: 1
+  blinkPeriod: 0.2
   miniCat: {fileID: 6217190057313754899, guid: e268a99ff6c88c440b9a140c303606aa, type: 3}
-  offsetTime: 2
-  sounds:
-  - {fileID: 8300000, guid: 6384d5e6ff4591b4e98e827334142138, type: 3}
-  - {fileID: 8300000, guid: 39d2df05f8a7c2f41b76757e577ee010, type: 3}
-  - {fileID: 8300000, guid: 1c676dbceab740a478ed9ef8ebfff317, type: 3}
-  - {fileID: 8300000, guid: e3026aca96bb6f04dafed3e75913f452, type: 3}
-  - {fileID: 8300000, guid: 35107bf0a2259db4b96881b8448b4de5, type: 3}
 --- !u!70 &6482556952117792830
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

@@ -7,6 +7,7 @@ public class HatControl : MonoBehaviour
     Vector2 contorlVector, moveDirect;
     float moveDistance;
     LineRenderer line, arrow;
+    public Vector2 getMoveDirect() { return moveDirect; }
 
     [SerializeField] float maxMovingDistance = 3, timeMovingBase = 0.05f;
     float timeMoving = 0, timeMovingElapsed = 0;
@@ -14,7 +15,7 @@ public class HatControl : MonoBehaviour
     Vector2 startPosition, endPosition;
  
     bool isMove = false, isStuned = false;
-    public void SetIsMove(bool state) { isMove = state; }
+    public bool getIsMove() { return isMove; }
     public void SetIsStuned(bool state) { isStuned = state; }
 
     Rigidbody2D rb;
@@ -23,21 +24,12 @@ public class HatControl : MonoBehaviour
 
     float afkTimer = 0, afkTime = 15;
 
-    void Start()
-    {
-        line = GameObject.Find("line").GetComponent<LineRenderer>();
-        arrow = GameObject.Find("arrow").GetComponent<LineRenderer>();
-        soundControl = GameObject.Find("SoundListener").GetComponent<SoundControl>();
-        rb = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
-    }
-
     void MoveCalculate() // Просчет направления и силы движения по вектору (Позиция мыши - Шляпа)
     {
         contorlVector = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
         moveDistance = contorlVector.magnitude;
         moveDirect = contorlVector / moveDistance;
-        if (moveDistance > maxMovingDistance) 
+        if (moveDistance > maxMovingDistance)
             moveDistance = maxMovingDistance;
     }
 
@@ -51,6 +43,15 @@ public class HatControl : MonoBehaviour
     {
         isMove = false;
         timeMovingElapsed = 0;
+    }
+
+    void Start()
+    {
+        line = GameObject.Find("line").GetComponent<LineRenderer>();
+        arrow = GameObject.Find("arrow").GetComponent<LineRenderer>();
+        soundControl = GameObject.Find("SoundListener").GetComponent<SoundControl>();
+        rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
 
     void Update()

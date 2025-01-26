@@ -5,28 +5,27 @@ using UnityEngine.SceneManagement;
 
 public class GameControl : MonoBehaviour
 {
-    HatControl hatControl;
+    HatCollisionHandler hatCH;
 
     [SerializeField] float offsetTime = 2;
     float offsetTimer = 0;
 
-    [SerializeField] GameObject miniCat;
 
     void Start()
     {
-        hatControl = GameObject.Find("Hat").GetComponent<HatControl>();
+        hatCH = GameObject.Find("Hat").GetComponent<HatCollisionHandler>();
     }
 
     // Update is called once per frame
     void Update()
     {
 
-        if (offsetTimer > 0)
+        if (hatCH.getIsHatFall())
         {
-            offsetTimer -= Time.deltaTime;
-            if (offsetTimer <= 0)
+            offsetTimer += Time.deltaTime;
+            if (offsetTimer >= offsetTime)
             {
-                if (nextlevelTrigger)
+                if (hatCH.getIsFinishedLevel())
                 {
                     if (SceneManager.GetActiveScene().buildIndex == 3)
                         SceneManager.LoadScene(1);

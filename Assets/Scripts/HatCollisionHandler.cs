@@ -6,39 +6,68 @@ using UnityEngine;
 
 public class HatCollisionHandler : MonoBehaviour
 {
-    HatControl hatControl;
-
-    [SerializeField] float stunTime = 0.2f;
-    [SerializeField] float blinkPeriod = 0.1f;
-    float stunTimer = 0;
-    float blinkTimer = 0;
 
     [SerializeField] sbyte health = 3;
-    [SerializeField] GameObject healthBar;
     [SerializeField] List<Sprite> hpSprites;
-    [SerializeField] List<Sprite> bucketSprites;
+    GameObject healthBar;
+    GameObject finish;
 
+    [SerializeField] float stunTime = 0.2f, blinkPeriod = 0.1f;
+    float stunTimer = 0, blinkTimer = 0;
     bool isBlink = false;
-    bool nextlevelTrigger = false;
 
-    bool isMove = false, isStuned = false, isHatFall = false;
+    int observers = 0;
+    bool isStuned = false, isHatFall = false, finishedLevel = false;
+    public bool getIsHatFall() { return isHatFall; }
+    public bool getIsFinishedLevel() { return finishedLevel; }
 
     SoundControl soundControl;
+    Animator animator;
+    HatControl hatControl;
+    Rigidbody2D rb;
 
+    [SerializeField] GameObject miniCat;
+
+    void EndLevel(bool finished) // true если финиш
+    {
+        animator.SetInteger("state", 6); // Переход в тригер fallHat
+        isHatFall = true;
+        hatControl.SetIsStuned(true);
+        if (hatControl.getMoveDirect().x < 0)
+            GetComponent<SpriteRenderer>().flipX = true;
+
+        this.finishedLevel = finished;
+    }
 
     void Start()
     {
-        hatControl = GameObject.Find("Hat").GetComponent<HatControl>();
         soundControl = GameObject.Find("SoundListener").GetComponent<SoundControl>();
+        healthBar = GameObject.Find("HealthBar");
+        finish = GameObject.Find("Bucket");
+        hatControl = GetComponent<HatControl>();
+        animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     void Update()
     {
-
         if (isStuned)
         {
-
+            stunTimer += Time.deltaTime;
             blinkTimer += Time.deltaTime;
+
+            if (stunTimer >= stunTime)
+            {
+                isStuned = false;
+                hatControl.SetIsStuned(false);
+
+                stunTimer = 0;
+                isBlink = false;
+                blinkTimer = 0;
+                GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
+                animator.SetInteger("state", 0);
+            }
+
             if (blinkTimer >= blinkPeriod)
             {
                 isBlink = !isBlink;
@@ -49,17 +78,6 @@ public class HatCollisionHandler : MonoBehaviour
                 GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.2f);
             else
                 GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
-
-            stunTimer += Time.deltaTime;
-            if (stunTimer >= stunTime)
-            {
-                isStuned = false;
-                stunTimer = 0;
-                isBlink = false;
-                blinkTimer = 0;
-                GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
-                animator.SetInteger("state", 0);
-            }
         }
 
     }
@@ -67,27 +85,17 @@ public class HatCollisionHandler : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision2D)
     {
         hatControl.TurnOffArrow();
+        hatControl.StopMoving();
+        rb.position += hatControl.getMoveDirect() / 6;
 
-        if (collision2D.transform.tag == "Finish")
+        if (collision2D.gameObject == finish)
         {
-            collision2D.transform.GetComponent<SpriteRenderer>().sprite = bucketSprites[1]; // Анимация ведра
-            hatControl.StopMoving();
-            rb.position += moveDirect / 6;
-            animator.SetInteger("state", 6);
-            isHatFall = true;
-            nextlevelTrigger = true;
-            if (moveDirect.x < 0)
-                GetComponent<SpriteRenderer>().flipX = true;
-
+            EndLevel(true);
             soundControl.playSound(SoundControl.audioName.hitBucket);
         }
         else
         {
-            isMove = false;
-            timeMovingElapsed = 0;
-            rb.position += moveDirect / 6;
-            animator.SetInteger("state", 5);
-
+            animator.SetInteger("state", 5); // Переход в триггер Hit
             soundControl.playSound(SoundControl.audioName.hitWall);
         }
     }
@@ -101,12 +109,10 @@ public class HatCollisionHandler : MonoBehaviour
     {
         if (collider2D.tag == "Observation")
         {
-            if (collider2D.GetComponent<ScareMech>().getIsWatching() && isMove)
+            if (collider2D.GetComponent<ScareMech>().getIsWatching() && hatControl.getIsMove())
             {
-                isMove = false;
-                timeMovingElapsed = 0;
-                animator.SetInteger("state", 5);
-
+                hatControl.StopMoving();
+                animator.SetInteger("state", 5); // Переход в триггер Hit
                 soundControl.playSound(SoundControl.audioName.scarecrowScream);
             }
         }
@@ -120,45 +126,31 @@ public class HatCollisionHandler : MonoBehaviour
 
     public void HitAnimationTrigger()
     {
-        //if (observers == 0)
         health--;
-        //else
-        //    health-=2;
-        //if (health < 0)
-        //    health = 0;
-
         healthBar.GetComponent<SpriteRenderer>().sprite = hpSprites[health];
+
         if (health == 0)
         {
-            animator.SetInteger("state", 6);
-            isHatFall = true;
-            offsetTimer = offsetTime;
-            if (moveDirect.x < 0)
-                GetComponent<SpriteRenderer>().flipX = true;
+            EndLevel(false);
         }
         else
         {
             isStuned = true;
+            hatControl.SetIsStuned(true);
         }
     }
     public void fallHatAnimationTrigger()
     {
-        if (moveDirect.x < 0)
+        if (hatControl.getMoveDirect().x < 0)
+            miniCat = Instantiate(miniCat, transform);
+        else
         {
             miniCat = Instantiate(miniCat, transform);
-        }
-        else if (moveDirect.x >= 0)
-        {
-            miniCat = Instantiate(miniCat, transform);
-            miniCat.GetComponent<minicat_run>().speed = -miniCat.GetComponent<minicat_run>().speed;
+            miniCat.GetComponent<minicat_run>().speed = -(miniCat.GetComponent<minicat_run>().speed);
             miniCat.GetComponent<SpriteRenderer>().flipX = true;
         }
-        offsetTimer = offsetTime;
-
-        if (nextlevelTrigger)
-        {
+        if (finishedLevel)
             miniCat.GetComponent<Animator>().SetBool("isFish", true);
-        }
 
         soundControl.playSound(SoundControl.audioName.catMeowing);
     }
