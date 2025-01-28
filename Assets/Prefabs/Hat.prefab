@@ -224,6 +224,7 @@ MonoBehaviour:
   maxMovingDistance: 2
   timeMovingBase: 0.12
   timeMovingDivider: 8
+  runSpeedBase: 0.01
 --- !u!114 &2591088376984280380
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -277,8 +278,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.018101264, y: -0.10697244}
-  m_Size: {x: 0.8616047, y: 0.3558407}
+  m_Offset: {x: 0.0146463355, y: -0.14411451}
+  m_Size: {x: 0.69576466, y: 0.26082614}
   m_Direction: 1
 --- !u!95 &175115103643229074
 Animator:

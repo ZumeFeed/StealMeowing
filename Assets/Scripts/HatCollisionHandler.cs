@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class HatCollisionHandler : MonoBehaviour
@@ -24,6 +21,7 @@ public class HatCollisionHandler : MonoBehaviour
     SoundControl soundControl;
     Animator animator;
     HatControl hatControl;
+    BuffManager buffManager;
     Rigidbody2D rb;
 
     [SerializeField] GameObject miniCat;
@@ -45,6 +43,7 @@ public class HatCollisionHandler : MonoBehaviour
         healthBar = GameObject.Find("HealthBar");
         finish = GameObject.Find("Bucket");
         hatControl = GetComponent<HatControl>();
+        buffManager = GameObject.Find("buffBar").GetComponent<BuffManager>();
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
     }
@@ -91,10 +90,12 @@ public class HatCollisionHandler : MonoBehaviour
         if (collision2D.gameObject == finish)
         {
             EndLevel(true);
+            finish.GetComponent<Animator>().SetBool("stealFish", true);
             soundControl.playSound(SoundControl.audioName.hitBucket);
         }
         else
         {
+            hatControl.SetIsStuned(true);
             animator.SetInteger("state", 5); // Переход в триггер Hit
             soundControl.playSound(SoundControl.audioName.hitWall);
         }
@@ -104,13 +105,21 @@ public class HatCollisionHandler : MonoBehaviour
     {
         if (collider2D.tag == "Observation")
             observers++;
+        if (collider2D.tag == "Buff")
+        {
+            buffManager.StartBuffTimer();
+            Destroy(collider2D.gameObject);
+            Debug.Log("Баф подобран");
+        }
+
     }
     void OnTriggerStay2D(Collider2D collider2D)
     {
         if (collider2D.tag == "Observation")
         {
-            if (collider2D.GetComponent<ScareMech>().getIsWatching() && hatControl.getIsMove())
+            if (collider2D.GetComponent<ScareMech>().getIsWatching() && hatControl.GetIsMove())
             {
+                hatControl.SetIsStuned(true);
                 hatControl.StopMoving();
                 animator.SetInteger("state", 5); // Переход в триггер Hit
                 soundControl.playSound(SoundControl.audioName.scarecrowScream);
@@ -122,7 +131,6 @@ public class HatCollisionHandler : MonoBehaviour
         if (collider2D.tag == "Observation")
             observers--;
     }
-
 
     public void HitAnimationTrigger()
     {
@@ -136,7 +144,6 @@ public class HatCollisionHandler : MonoBehaviour
         else
         {
             isStuned = true;
-            hatControl.SetIsStuned(true);
         }
     }
     public void fallHatAnimationTrigger()
