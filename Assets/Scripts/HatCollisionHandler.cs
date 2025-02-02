@@ -111,7 +111,13 @@ public class HatCollisionHandler : MonoBehaviour
             Destroy(collider2D.gameObject);
             Debug.Log("Баф подобран");
         }
-
+        if (collider2D.tag == "OneShot")
+        {
+            health=0;
+            healthBar.GetComponent<SpriteRenderer>().sprite = hpSprites[health];
+            GameObject.Find("dog").GetComponent<DogRun>().StopRun();
+            EndLevel(false);
+        }
     }
     void OnTriggerStay2D(Collider2D collider2D)
     {
@@ -119,7 +125,7 @@ public class HatCollisionHandler : MonoBehaviour
         {
             if (collider2D.GetComponent<ScareMech>().getIsWatching() && hatControl.GetIsMove())
             {
-                hatControl.SetIsStuned(true);
+                hatControl.SetIsStuned(true); 
                 hatControl.StopMoving();
                 animator.SetInteger("state", 5); // Переход в триггер Hit
                 soundControl.playSound(SoundControl.audioName.scarecrowScream);

@@ -15,6 +15,7 @@ public class HatControl : MonoBehaviour
     [SerializeField] float runSpeedBase = 0.0005f;
 
     bool isMove = false, isStuned = false, isBuffed = false;
+    public void SetIsMove(bool isMove) { this.isMove = isMove; }
     public bool GetIsMove() { return isMove; }
     public void SetIsStuned(bool state) { isStuned = state; }
     public bool GetIsBuffed() { return isBuffed; }
@@ -105,17 +106,23 @@ public class HatControl : MonoBehaviour
                 MoveCalculate();
                 TurnOnArrow();
 
+                timeMoving = timeMovingBase + (moveDistance / timeMovingDivider); // Рассчет времени передвижения, по формуле (Базовое время + (Расстояние / делительВремени))
+                startPosition = transform.position;
+                endPosition = transform.position - (Vector3)(moveDistance * moveDirect);
+
                 rb.position -= runSpeedBase * moveDirect * moveDistance * Time.deltaTime;
                 animator.SetInteger("state", 7);
+                isMove = true;
             }
             if (Input.GetMouseButtonUp(0)) // Левая кнопка мыши отпущена после зажатия
             {
                 TurnOffArrow();
                 animator.SetInteger("state", 0);
+                isMove = false;
             }
         }
 
-        if (isMove) // Движение
+        if (isMove && !isBuffed) // Движение
         {
             timeMovingElapsed += Time.deltaTime;
             rb.position = Vector3.Lerp(startPosition, endPosition, timeMovingElapsed/timeMoving); // Просчитанное движение по вектору

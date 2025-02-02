@@ -7,22 +7,26 @@ public class BuffManager : MonoBehaviour
     [SerializeField] float buffTime = 4;
     float buffTimer;
 
+    SpriteRenderer buffFrame;
     Image buffBarImage;
     HatControl hatControl;
 
     public void StartBuffTimer()
     {
         hatControl.SetIsBuffed(true);
-        buffTimer = buffTime;
         buffBarImage.enabled = true;
+        buffFrame.enabled = true;
+        buffTimer = buffTime;
         buffBarImage.fillAmount = buffTimer / buffTime;
     }
 
     void Start()
     {
         buffBarImage = GetComponent<Image>();
-        buffBarImage.enabled = false;
+        buffFrame = GameObject.Find("buffFrame").GetComponent<SpriteRenderer>();
         hatControl = GameObject.Find("Hat").GetComponent<HatControl>();
+        buffBarImage.enabled = false;
+        buffFrame.enabled = false;
     }
 
     void Update()
@@ -35,6 +39,8 @@ public class BuffManager : MonoBehaviour
             {
                 buffTimer = 0;
                 buffBarImage.enabled = false;
+                buffFrame.enabled = false;
+                hatControl.SetIsMove(false);
                 hatControl.SetIsBuffed(false);
             }
         }

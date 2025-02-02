@@ -127,6 +127,69 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6185d4f7ef9eb064ba84df6527497dda
+      internalID: -958758706
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: decors_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c066ef0ab1178e44991a9b9e53df84d1
+      internalID: 701576016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: decors_2
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d7af33bdedec05a42923dcde750be82f
+      internalID: -340046743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: decors_3
+      rect:
+        serializedVersion: 2
+        x: 0
         y: 32
         width: 32
         height: 32
@@ -137,14 +200,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2e106eac90acfa6439de3aa9a3935b32
-      internalID: -958758706
+      spriteID: 49b2b4b65688c0d4c98d11d7e0d5b836
+      internalID: 207091963
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: decors_1
+      name: decors_4
       rect:
         serializedVersion: 2
         x: 32
@@ -158,14 +221,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b5d44d45b3a047041ac1e75b12bf5cd6
-      internalID: 701576016
+      spriteID: 6b4b9e5a4a2716c4fbd0da5bdec04209
+      internalID: -849455181
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: decors_2
+      name: decors_5
       rect:
         serializedVersion: 2
         x: 64
@@ -179,14 +242,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 81e8935904464bc498dd55004bc94e78
-      internalID: -340046743
+      spriteID: 1cc4fdfcc9aacfa49b622624d33f70cb
+      internalID: 1217977961
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: decors_3
+      name: decors_6
       rect:
         serializedVersion: 2
         x: 0
@@ -200,14 +263,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 17d02be0977fd144786f09efc2216568
-      internalID: 207091963
+      spriteID: 2682dc38bc132144e81b9db96746fd2b
+      internalID: -162437599
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: decors_4
+      name: decors_7
       rect:
         serializedVersion: 2
         x: 32
@@ -221,8 +284,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 910cd0c2be240304397469e923a02b75
-      internalID: -849455181
+      spriteID: 42d9eedcdf1ac144a8920e47ad971b85
+      internalID: -925460279
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: decors_8
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5994187ca1a871b40aa6b3c33e192ccc
+      internalID: 2088960384
       vertices: []
       indices: 
       edges: []
@@ -243,6 +327,10 @@ TextureImporter:
       decors_2: -340046743
       decors_3: 207091963
       decors_4: -849455181
+      decors_5: 1217977961
+      decors_6: -162437599
+      decors_7: -925460279
+      decors_8: 2088960384
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
