@@ -40,7 +40,7 @@ public class BuffManager : MonoBehaviour
                 buffTimer = 0;
                 buffBarImage.enabled = false;
                 buffFrame.enabled = false;
-                hatControl.SetIsMove(false);
+                hatControl.StopMoving();
                 hatControl.SetIsBuffed(false);
             }
         }

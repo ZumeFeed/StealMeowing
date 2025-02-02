@@ -64,7 +64,7 @@ public class HatCollisionHandler : MonoBehaviour
                 isBlink = false;
                 blinkTimer = 0;
                 GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
-                animator.SetInteger("state", 0);
+
             }
 
             if (blinkTimer >= blinkPeriod)
@@ -85,7 +85,7 @@ public class HatCollisionHandler : MonoBehaviour
     {
         hatControl.TurnOffArrow();
         hatControl.StopMoving();
-        rb.position += hatControl.getMoveDirect() / 6;
+        rb.position += hatControl.getMoveDirect() / 2;
 
         if (collision2D.gameObject == finish)
         {
@@ -116,6 +116,7 @@ public class HatCollisionHandler : MonoBehaviour
             health=0;
             healthBar.GetComponent<SpriteRenderer>().sprite = hpSprites[health];
             GameObject.Find("dog").GetComponent<DogRun>().StopRun();
+            hatControl.TurnOffArrow();
             EndLevel(false);
         }
     }
@@ -127,6 +128,7 @@ public class HatCollisionHandler : MonoBehaviour
             {
                 hatControl.SetIsStuned(true); 
                 hatControl.StopMoving();
+                hatControl.TurnOffArrow();
                 animator.SetInteger("state", 5); // Переход в триггер Hit
                 soundControl.playSound(SoundControl.audioName.scarecrowScream);
             }
@@ -150,6 +152,7 @@ public class HatCollisionHandler : MonoBehaviour
         else
         {
             isStuned = true;
+            animator.SetInteger("state", 0);
         }
     }
     public void fallHatAnimationTrigger()

@@ -9,6 +9,7 @@ public class dogSpawn : MonoBehaviour
     GameObject hat;
     GameObject mainCamera;
     GameObject dog;
+    SoundControl soundControl;
 
     bool isAnimation = false;
     bool isBackward = false;
@@ -19,6 +20,7 @@ public class dogSpawn : MonoBehaviour
         hat = GameObject.Find("Hat");
         mainCamera = GameObject.Find("Main Camera");
         dog = GameObject.Find("dog");
+        soundControl = GameObject.Find("SoundListener").GetComponent<SoundControl>();
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -69,6 +71,7 @@ public class dogSpawn : MonoBehaviour
             if (timeElapsed >= dogTimeMoving)
             {
                 dog.GetComponent<Animator>().SetBool("isBarks",true);
+                soundControl.playSound(SoundControl.audioName.dogBark);
                 isDogRun = false;
                 timeElapsed = dogTimeMoving;
             }

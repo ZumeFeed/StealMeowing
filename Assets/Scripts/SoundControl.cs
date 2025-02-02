@@ -6,7 +6,7 @@ public class SoundControl : MonoBehaviour
 
     public enum audioName
     { 
-        hatMove, hitWall, hitBucket, scarecrowScream, catMeowing
+        hatMove, hitWall, hitBucket, scarecrowScream, catMeowing, dogBark
     }
 
     AudioSource audioSource;
